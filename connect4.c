@@ -188,7 +188,7 @@ int main()
     // ●yellow discs by the lowercase letter o.
     if (CompOrUser() != 0)
     {
-        // user ile oyun
+        // with user
 
         while (1)
         {
@@ -233,7 +233,7 @@ int main()
     }
     else
     {
-        // comp ile oyun
+        // with comp
         while (1)
         {
             int col;
