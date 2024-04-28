@@ -1,15 +1,53 @@
-// Connect4 game in C
-//edited version
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 #define ROWS 6
 #define COLS 7
-// horizontal; vertical; diagonal check for win (add for each: yellow&red)
-// bot
-// advanced bot
 
 char board[ROWS][COLS];
+int CompTurn()
+{
+    srand(time(NULL));
+    int col;
+
+    
+    for (col = 0; col < COLS; col++)
+    {
+        int row = gravity(col);
+        if (row != -1)
+        {
+           
+            board[row][col] = '*';
+            if (checkWinner(row, col) == 1)
+            {
+                board[row][col] = ' '; 
+                return col;
+            }
+            board[row][col] = ' '; 
+        }
+    }
+
+    for (col = 0; col < COLS; col++)
+    {
+        int row = gravity(col);
+        if (row != -1)
+        {
+            
+            board[row][col] = 'o';
+            if (checkWinner(row, col) == 1)
+            {
+               
+                board[row][col] = ' '; 
+                return col;
+            }
+            board[row][col] = ' '; 
+        }
+    }
+
+    // If no winning or blocking moves, make a random move
+    return rand() % COLS;
+}
+
 int checkWinner(int row, int col)
 {
     // check horizontal
@@ -28,7 +66,7 @@ int checkWinner(int row, int col)
             count = 0;
         }
     }
-// check vertical
+    // check vertical
     count = 0;
     for (int i = 0; i < ROWS; i++)
     {
@@ -47,30 +85,36 @@ int checkWinner(int row, int col)
     count = 0;
     for (int i = 0; i < ROWS; i++)
     {
-        if(board[i][col]==piece){
+        if (board[i][col] == piece)
+        {
             count++;
             col++;
-            if(count==4){
+            if (count == 4)
+            {
                 return 1;
             }
         }
-        else if(i!=piece){
-            count=0;
+        else if (i != piece)
+        {
+            count = 0;
         }
     }
     // check diagonally bottom-right to top-left
     count = 0;
     for (int i = 0; i < ROWS; i++)
     {
-        if(board[i][col]==piece){
+        if (board[i][col] == piece)
+        {
             count++;
             col--;
-            if(count==4){
+            if (count == 4)
+            {
                 return 1;
             }
         }
-        else if(i!=piece){
-            count=0;
+        else if (i != piece)
+        {
+            count = 0;
         }
     }
 }
@@ -79,79 +123,19 @@ int gravity(int col)
     for (int i = ROWS - 1; i >= 0; i--)
     {
         if (board[i][col] == ' ')
-        {
             return i;
-        }
-        // else
-        // {
-        //     return -1;
-        // }
     }
 }
 int checkThecell(int row, int col) // empty=0; red*=1; yellow'o'=-1
 {
-    // int row = gravity(col);
     if (board[row][col] == ' ')
-    {
         return 0;
-    }
     else if (board[row][col] = '*')
-    {
         return 1;
-    }
     else if (board[row][col] == 'o')
-    {
         return -1;
-    }
 }
-// int UserRed(int col)
-// {
-//     int row = gravity(col);
 
-//     printf("Red(*) is playing.\n");
-//     printf("Enter col: ");
-//     scanf("%d", &col);
-
-//     while (checkThecell(row, col) != 0)
-//     {
-//         printf("Red(*) tries again.");
-//         printf("Enter col: ");
-//         scanf("%d", &col);
-//     }
-//     // show the grid again
-//     board[row][col] = '*';
-//     for (int i = 0; i < ROWS; i++)
-//     {
-//         for (int j = 0; j < COLS; j++)
-//         {
-//             printf("%c", board[i][j]);
-//         }
-//     }
-// }
-// int UserYellow(int col)
-// {
-//     int row = gravity(col);
-// printf("Yellow(o) is playing.\n");
-// printf("Enter col: ");
-// scanf("%d", &col);
-
-// while (checkThecell(row, col) != 0)
-// {
-//     printf("Yellow(o) tries again.");
-//     printf("Enter col: ");
-//     scanf("%d", &col);
-//     // }
-//     board[row][col] = 'o';
-
-//     // show the grid again
-//     for (int i = 0; i < ROWS; i++)
-//     {
-//         for (int j = 0; j < COLS; j++)
-//         {
-//             printf("%c", board[i][j]);
-//         }
-//     }
-// }
 void initialize_board()
 {
     for (int i = 0; i < ROWS; i++)
@@ -176,21 +160,16 @@ void display_board()
         printf("+---+---+---+---+---+---+---+\n");
     }
 }
-int CompOrUser() // 0-> computer ile oyun, 1->user
+int CompOrUser() // 0->against computer, 1->against user
 {
     char opponent;
 
     printf("Would you like to play against a Bot or a User?(B/U): ");
     scanf("%c", &opponent);
     if (opponent == 'B')
-    {
         return 0;
-    }
     else if (opponent == 'U')
-    {
-
         return 1;
-    }
     else
     {
         printf("Try again.Choose B or U: ");
@@ -207,83 +186,101 @@ int main()
 
     // ●	red discs will be represented by (*)
     // ●yellow discs by the lowercase letter o.
-    if (CompOrUser() != 0) 
+    if (CompOrUser() != 0)
     {
         // user ile oyun
 
         while (1)
         {
             int col;
-
             if (turn == 0)
-            {
                 printf("Yellow(o) is playing.\n");
-            }
-
             else
-            {
                 printf("Red(*) is playing.\n");
-            }
 
             printf("Enter col: ");
             scanf("%d", &col);
+            col = col - 1;
             int row = gravity(col);
 
             while (checkThecell(row, col) != 0)
             {
                 if (turn == 0)
-                {
                     printf("Yellow(o) tries again.");
-                }
-
                 else
-                {
                     printf("Red(*) tries again.");
-                }
 
                 printf("Enter col: ");
                 scanf("%d", &col);
             }
             if (turn == 0)
-            {
                 board[row][col] = 'o';
-            }
-
             else
-            {
                 board[row][col] = '*';
-            }
 
             display_board();
 
-            if (checkWinner(row, col)==1)
+            if (checkWinner(row, col) == 1)
             {
-                if(turn == 0) printf("User 1 is winner");
-                else if(turn == 1) printf("User 2 is winner");
-
+                if (turn == 0)
+                    printf("User 1 is winner");
+                else if (turn == 1)
+                    printf("User 2 is winner");
                 break;
             }
-
             turn = (turn + 1) % 2;
         }
     }
     else
     {
         // comp ile oyun
-        if (turn == 0)
+        while (1)
         {
-            // UserYellow(col);
-        }
-        else
-        {
-            
-            
-            // bot
+            int col;
+
+            if (turn == 0)
+                printf("User is playing.\n");
+            else
+                printf("Computer is playing.\n");
+
+            if (turn == 0)
+            {
+                printf("Enter col: ");
+                scanf("%d", &col);
+                col = col - 1;
+            }
+            else
+                col = CompTurn();
+
+            int row = gravity(col);
+
+            while (checkThecell(row, col) != 0)
+            {
+                if (turn == 0)
+                    printf("User tries again.");
+                else
+                    printf("Computer tries again.");
+
+                printf("Enter col: ");
+                scanf("%d", &col);
+            }
+            if (turn == 0)
+                board[row][col] = 'o';
+            else
+                board[row][col] = '*';
+
+            display_board();
+
+            if (checkWinner(row, col) == 1)
+            {
+                if (turn == 0)
+                    printf("User is winner");
+                else if (turn == 1)
+                    printf("Computer is winner");
+                break;
+            }
+            turn = (turn + 1) % 2;
         }
     }
     return 0;
 }
-
-
-
-// komputerin aptalca oynamasi + dioqanal
