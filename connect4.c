@@ -5,6 +5,11 @@
 #define COLS 7
 
 char board[ROWS][COLS];
+
+int CompTurn();
+int gravity(int col);
+int checkWinner(int row, int col);
+
 int CompTurn()
 {
     srand(time(NULL));
